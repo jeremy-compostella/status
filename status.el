@@ -24,6 +24,7 @@
 (require 'status-project-manager)
 (require 'status-purple)
 (require 'status-gnus)
+(require 'status-battery)
 (require 'status-date)
 
 (defgroup status nil
@@ -33,7 +34,7 @@
 (defconst status-buffer (get-buffer " *Minibuf-0*")
   "Buffer in which write the status information.")
 
-(defcustom status-format '((status-activity status-project-manager status-device-control)
+(defcustom status-format '((status-activity status-project-manager)
 			   (status-purple status-gnus status-battery status-date))
   "Status format list"
   :group 'status)
@@ -77,7 +78,7 @@ the status information."
 
 (defun status-build ()
   (let* ((items (mapcar 'status-build-items status-format))
-	 (width (status-buffer-width)))
+	 (width (status-window-width)))
     (with-current-buffer status-buffer
       (erase-buffer)
       (let* ((markers (mapcar 'status-insert-item items)))

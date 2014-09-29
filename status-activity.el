@@ -33,9 +33,9 @@
   "face for current activity"
   :group 'status-activity)
 
-(eval-after-load "actvity"
+(eval-after-load "activity"
   '(progn (defun status-activity ()
-	    (propertize (format status-current-activity-fmt
+	    (propertize (format status-activity-fmt
 				(activity-name (current-activity)))
 			'face 'status-activity-face))
 	  (add-hook 'toggle-activity-hooks 'status-update)))
