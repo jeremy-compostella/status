@@ -22,10 +22,9 @@
 
 (require 'status-activity)
 (require 'status-project-manager)
-(require 'status-device-control)
 (require 'status-purple)
 (require 'status-gnus)
-(require 'status-time)
+(require 'status-date)
 
 (defgroup status nil
   "Status management group."
