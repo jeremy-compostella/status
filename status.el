@@ -31,7 +31,7 @@
   "Status management group."
   :group 'convenience)
 
-(defconst status-buffer (get-buffer " *Minibuf-0*")
+(defconst status-module-buffer (get-buffer " *Minibuf-0*")
   "Buffer in which write the status information.")
 
 (defcustom status-format '((status-activity status-project-manager)
@@ -79,7 +79,7 @@ the status information."
 (defun status-build ()
   (let* ((items (mapcar 'status-build-items status-format))
 	 (width (status-window-width)))
-    (with-current-buffer status-buffer
+    (with-current-buffer status-module-buffer
       (erase-buffer)
       (let* ((markers (mapcar 'status-insert-item items)))
 	(when (>= (length items) 2)
@@ -93,11 +93,12 @@ the status information."
   "Update the status informations."
   (interactive)
   (when (= (minibuffer-depth) 0)
-    (with-current-buffer status-buffer
+    (with-current-buffer status-module-buffer
       (let ((saved-status (buffer-string)))
 	(condition-case nil
 	    (status-build)
-	  (error (progn (erase-buffer) (insert saved-status))))))))
+	  (error (with-current-buffer status-module-buffer
+		   (erase-buffer) (insert saved-status))))))))
 
 (defun toggle-status ()
   (interactive)
@@ -105,7 +106,7 @@ the status information."
       (progn (when status-refresh-timer
 	       (cancel-timer status-refresh-timer)
 	       (setq status-refresh-timer nil))
-	     (with-current-buffer status-buffer
+	     (with-current-buffer status-module-buffer
 	       (erase-buffer))
 	     (message (propertize "Status disabled."
 				  'face 'error)))
