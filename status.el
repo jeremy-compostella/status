@@ -112,7 +112,7 @@ the status information."
 				  'face 'error)))
     (status-update)
     (unless (= 0 status-refresh-timer-delay)
-      (setq status-refresh-timer-delay
+      (setq status-refresh-timer
 	    (run-at-time 1 status-refresh-timer-delay 'status-update)))
     (message (propertize "Status enabled."
 			 'face 'success)))
