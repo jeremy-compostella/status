@@ -36,16 +36,39 @@
   "GNUS group to get unread article number"
   :group 'status-gnus)
 
-(defface status-gnus-face
-  '((t (:weight bold :width ultra-expanded
-		:inherit variable-pitch :foreground "yellow")))
+(defcustom status-gnus-medium-threshold 10
+  "Medium threshold."
+  :group 'status-gnus)
+
+(defcustom status-gnus-high-threshold 30
+  "Medium threshold."
+  :group 'status-gnus)
+
+(defface status-gnus-face-low
+  '((t (:background "RoyalBlue" :foreground "white" :weight bold)))
   "face for current gnus"
   :group 'status-gnus)
+
+(defface status-gnus-face-medium
+  '((t (:background "yellow" :foreground "black" :weight bold)))
+  "face for current gnus"
+  :group 'status-gnus)
+
+(defface status-gnus-face-high
+  '((t (:background "red1" :foreground "white" :weight bold)))
+  "face for current gnus"
+  :group 'status-gnus)
+
+(defun status-gnus-get-group-face (nb)
+  (cond ((< nb status-gnus-medium-threshold) 'status-gnus-face-low)
+	((< nb status-gnus-high-threshold) 'status-gnus-face-medium)
+	('status-gnus-face-high)))
 
 (defun status-gnus-group-to-string (group)
   (let ((unread (gnus-group-unread group)))
     (unless (zerop unread)
-      (format "%s:%d" group unread))))
+      (propertize (format "%s:%d" group unread)
+		  'face (status-gnus-get-group-face unread)))))
 
 (defun status-gnus-string ()
   (let ((groups (delq nil (mapcar 'status-gnus-group-to-string status-gnus-groups))))
@@ -55,8 +78,6 @@
 
 (eval-after-load "gnus-group"
   '(progn (defun status-gnus ()
-	    (let ((status (status-gnus-string)))
-	      (when status
-		(propertize status 'face 'status-gnus-face))))))
+	    (status-gnus-string))))
 
 (provide 'status-gnus)
